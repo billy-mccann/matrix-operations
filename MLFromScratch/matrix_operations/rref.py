@@ -66,6 +66,3 @@ def rref(input_matrix, epsilon: float = 1e-10) -> list[list[float]]:
                 result[i][j] = 0.0
 
     return result
-
-if __name__ == '__main__':
-    print("It ran...")

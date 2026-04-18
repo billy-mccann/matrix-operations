@@ -1,5 +1,5 @@
 import unittest
-from matrix_operations import rref
+from MLFromScratch.matrix_operations import rref
 
 class TestRref(unittest.TestCase):
 

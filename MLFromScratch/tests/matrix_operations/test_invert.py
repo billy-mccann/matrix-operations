@@ -1,5 +1,5 @@
 import unittest
-from matrix_operations import invert, identity_matrix, multiply_matrices
+from MLFromScratch.matrix_operations import invert, identity_matrix, multiply_matrices
 
 class TestInvert(unittest.TestCase):
 
