@@ -1,15 +1,19 @@
 from MLFromScratch.matrix_operations import transpose, invert, multiply_matrices
+from MLFromScratch.tests.test_data.housing_dummy_data import DummyData
 
-def scale_entries(x):
-    xt = transpose(x)
-    for row in xt:
-        max_entry = max(row)
-        if max_entry != 0:
-            for j in range(len(row)):
-                row[j] /= max_entry
-    #xt = [[(entry/max(row)) for entry in row] for row in xt]
-    return transpose(xt)
+def extract_x_y(training_data: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
+    data_t = transpose(training_data)
 
+    x_t = data_t[:-1]
+    x = transpose(x_t)
+    x = add_ones_column(x)
+
+    y_t = data_t[-1:]
+    y = transpose(y_t)
+    return x, y
+
+# useful for checking if something is close to identity. Should probably
+# generalize this to all numbers.
 def clean_floating_point_errors(x, epsilon = 1.0e-10):
     for i in range(len(x)):
         for j in range(len(x[0])):
@@ -19,7 +23,7 @@ def clean_floating_point_errors(x, epsilon = 1.0e-10):
                 x[i][j] = 1.0
     return x
 
-def add_ones_column(x):
+def add_ones_column(matrix_x: list[list[float]]) -> list[list[float]]:
     """
     This method merely adds a '1' to the front of each row for
     conveniently computing w_0
@@ -27,7 +31,7 @@ def add_ones_column(x):
     THE RESPONSIBILITY TO PROVIDE PROPERLY FORMED INPUT LIES WITH THE CALLER
     Input should be arranged as follows:
 
-    :param x: x needs to be an 'n x d' matrix, completely filled.
+    :param matrix_x: x needs to be an 'n x d' matrix, completely filled.
 
             Each row of x represents a data point of 'd' dimensions.
             For the common example:
@@ -48,32 +52,41 @@ def add_ones_column(x):
         |       ...           |     |1     ...     |
         | 1 x_n1 x_12 ... x_nd|     |1  --x_n^T--  |
     """
-    return [[1] + row for row in x]
+    return [[1] + row for row in matrix_x]
+
+class LinearRegression:
+
+    def train_least_squares(training_data: list[list[float]]):
+        x, y = extract_x_y(training_data)
+        xt = transpose(x)
+        xtx = multiply_matrices(xt, x)
+        xtx_inverse = invert(xtx)
+        xty = multiply_matrices(xt, y)
+        w_least_squares = multiply_matrices(xtx_inverse, xty)
+        w = transpose(w_least_squares)[0]
+
+        def predict(input):
+            input = [1] + input
+            total = 0
+            nonlocal w
+            for i in range(len(input)):
+                total += input[i]*w[i]
+            return total
+
+        return LRModel(predict)
+
+class LRModel:
+
+    def __init__(self, predict):
+        self.predict = predict
 
 if __name__ == '__main__':
-    x = [
-        [2, 2000],
-        [2, 2100],
-        [2, 1800],
-        [3, 2500],
-        [3, 2600],
-        [3, 2100],
-    ]
-    x = add_ones_column(x)
-    x = scale_entries(x)
-    print(f"x = {x}")
-    xt = transpose(x)
-    print(f"xt = {xt}")
 
-    xtx = multiply_matrices(xt, x)
-    print(f"xtx = {xtx}")
+    data = DummyData.housing_data
+    model = LinearRegression.train_least_squares(data)
 
-    xtx_inverse = invert(xtx)
-    print(f"xtx_inverse = {xtx_inverse}")
+    x_test = [[1400.0, 2.0], [1732, 3], [1800, 3], [2100, 4]]
 
-    identity_ish = multiply_matrices(xtx, xtx_inverse)
-    print(f"close to identity = {identity_ish}")
-
-    identity = clean_floating_point_errors(identity_ish)
-    print(f"should be identity = {identity}")
-
+    print("About to model.....")
+    for house in x_test:
+        print(model.predict(house))
