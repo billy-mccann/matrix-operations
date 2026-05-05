@@ -1,26 +1,29 @@
-from src.matrix_operations import transpose, invert, multiply_matrices
+import src.matrix_operations as mo 
 from tests.test_data.housing_dummy_data import DummyData
 
 def extract_x_y(training_data: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
-    data_t = transpose(training_data)
+    data_t = mo.transpose(training_data)
 
     x_t = data_t[:-1]
-    x = transpose(x_t)
+    x = mo.transpose(x_t)
     x = add_ones_column(x)
 
     y_t = data_t[-1:]
-    y = transpose(y_t)
+    y = mo.transpose(y_t)
     return x, y
 
-# useful for checking if something is close to identity. Should probably
-# generalize this to all numbers.
-def clean_floating_point_errors(x, epsilon = 1.0e-10):
+
+def clean_floating_point_errors(x: list[list[float]], epsilon: float = 1.0e-10) -> list[list[float]]:
+    """
+    Removes floating point errors less than epsilon from input matrix x.
+
+    :param x: matrix of floating point numbers
+    """
     for i in range(len(x)):
         for j in range(len(x[0])):
-            if abs(x[i][j]) < epsilon:
-                x[i][j] = 0.0
-            if abs(x[i][j] - 1) < epsilon:
-                x[i][j] = 1.0
+            nearest = round(x[i][j])
+            if abs(nearest - x[i][j]) < epsilon:
+                x[i][j] = nearest
     return x
 
 def add_ones_column(matrix_x: list[list[float]]) -> list[list[float]]:
@@ -54,17 +57,23 @@ def add_ones_column(matrix_x: list[list[float]]) -> list[list[float]]:
     """
     return [[1] + row for row in matrix_x]
 
+class LRModel:
+
+    def __init__(self, predict):
+        self.predict = predict
+
+
 class LinearRegression:
 
     @staticmethod
-    def train_least_squares(training_data: list[list[float]]):
+    def train_least_squares(training_data: list[list[float]]) -> LRModel:
         x, y = extract_x_y(training_data)
-        xt = transpose(x)
-        xtx = multiply_matrices(xt, x)
-        xtx_inverse = invert(xtx)
-        xty = multiply_matrices(xt, y)
-        w_least_squares = multiply_matrices(xtx_inverse, xty)
-        w = transpose(w_least_squares)[0]
+        xt = mo.transpose(x)
+        xtx = mo.multiply_matrices(xt, x)
+        xtx_inverse = mo.invert(xtx)
+        xty = mo.multiply_matrices(xt, y)
+        w_least_squares = mo.multiply_matrices(xtx_inverse, xty)
+        w = mo.transpose(w_least_squares)[0]
 
         def predict(input):
             input = [1] + input
@@ -76,10 +85,10 @@ class LinearRegression:
 
         return LRModel(predict)
 
-class LRModel:
+# class LRModel:
 
-    def __init__(self, predict):
-        self.predict = predict
+ #   def __init__(self, predict):
+ #       self.predict = predict
 
 if __name__ == '__main__':
 
@@ -88,7 +97,6 @@ if __name__ == '__main__':
 
     x_test = [[1400.0, 2.0], [1732, 3], [1800, 3], [2100, 4]]
 
-    print("About to model.....")
     for house in x_test:
         print(model.predict(house))
 
