@@ -56,6 +56,7 @@ def add_ones_column(matrix_x: list[list[float]]) -> list[list[float]]:
 
 class LinearRegression:
 
+    @staticmethod
     def train_least_squares(training_data: list[list[float]]):
         x, y = extract_x_y(training_data)
         xt = transpose(x)
@@ -90,3 +91,4 @@ if __name__ == '__main__':
     print("About to model.....")
     for house in x_test:
         print(model.predict(house))
+
