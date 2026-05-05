@@ -1,5 +1,5 @@
-from MLFromScratch.matrix_operations import transpose, invert, multiply_matrices
-from MLFromScratch.tests.test_data.housing_dummy_data import DummyData
+from src.matrix_operations import transpose, invert, multiply_matrices
+from tests.test_data.housing_dummy_data import DummyData
 
 def extract_x_y(training_data: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     data_t = transpose(training_data)
