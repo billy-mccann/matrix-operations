@@ -1,5 +1,5 @@
-from typing_extensions import Doc
-import src.matrix_operations as mo 
+# from typing_extensions import Doc
+import src.matrix_operations as mo
 from tests.test_data.housing_dummy_data import DummyData
 
 class LRModel:
@@ -16,15 +16,15 @@ class LinearRegression:
         xtx = mo.multiply_matrices(xt, x)
         xtx_inverse = mo.invert(xtx)
         xty = mo.multiply_matrices(xt, y)
-        w_least_squares = mo.multiply_matrices(xtx_inverse, xty)
-        w = mo.transpose(w_least_squares)[0]
+        w_ls_transpose = mo.multiply_matrices(xtx_inverse, xty)
+        w_ls = mo.transpose(w_ls_transpose)[0]
 
         def predict(input):
             input = [1] + input
             total = 0
-            nonlocal w
+            nonlocal w_ls
             for i in range(len(input)):
-                total += input[i]*w[i]
+                total += input[i]*w_ls[i]
             return total
 
         return LRModel(predict)
@@ -38,5 +38,5 @@ if __name__ == '__main__':
     x_test = [[1400.0, 2.0], [1732, 3], [1800, 3], [2100, 4]]
 
     for house in x_test:
-        print(model.predict(house))
+        print(round(model.predict(house)))
 

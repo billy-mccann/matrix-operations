@@ -26,6 +26,23 @@ def clean_floating_point_errors(x: list[list[float]], epsilon: float = 1.0e-10) 
 
 
 def extract_x_y(training_data: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
+    """
+    Takes a matrix of training data and returns matrix x, y. 
+    
+    Usage: 
+        x, y = extract_x_y(training_data)
+
+        x, y can then be used for general purposes (e.g. calculating XtX^-1)
+
+    :param training_data: a matrix in which rows are data points, and columns are variables,
+    with the last column being the dependent variable (y). As each row is a data point, we 
+    want len(training_data) >> len(training_data[0]). That is, many more rows than columns, or 
+    a 'tall and skinny' matrix, as opposed to 'short and fat', or even square.
+
+    e.g. [ [x1_1, x2_1, x3_1, y1],  where x1_i = square feet, x2_i = num bedrooms, x3_i = num bathrooms,  yi = price
+           [x1_2, x2_2, x3_2, y2]
+        ]
+    """ 
     data_t = mo.transpose(training_data)
 
     x_t = data_t[:-1]
