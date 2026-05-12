@@ -1,13 +1,13 @@
-"""
-RREF (Reduced Row Echelon Form) computation.
-
-Implements Gaussian elimination with optional floating-point tolerance.
-Supports rectangular matrices and returns a new matrix in RREF.
-
-Assumes input is a list of lists of numbers.
-"""
 def rref(input_matrix, epsilon: float = 1e-10) -> list[list[float]]:
     """
+
+    RREF (Reduced Row Echelon Form) computation.
+
+    Implements Gaussian elimination with optional floating-point tolerance.
+    Supports rectangular matrices and returns a new matrix in RREF.
+
+    Assumes input is a list of lists of numbers.
+ 
     :param input_matrix: the matrix to be row-reduced.
     :param epsilon: used for conversion to zero in floating point arithmetic.
     :return: input_matrix in its row-reduced-echelon-form, represented as floats.

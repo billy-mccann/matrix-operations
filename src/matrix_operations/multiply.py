@@ -1,15 +1,16 @@
-"""
- Multiply matrices A*B = C
-"""
 
 def multiply_matrices(a, b):
     """
+    
+    Multiply matrices A*B = C
+
+    multiply_matrices() accepts matrices of any size, but raises a
+    ValueError if they are not properly sized to be multiplied.
+    
     :param a: A, a matrix of size 'm by k'
     :param b: B, a matrix of size 'k by n'
     :return: C, a matrix of size 'm by n'
 
-    multiply_matrices() accepts matrices of any size, but raises a
-    ValueError if they are not properly sized to be multiplied.
     """
 
     if not a or not b or len(a) < 1 or len(b) < 1:

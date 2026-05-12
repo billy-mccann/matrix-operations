@@ -1,5 +1,5 @@
 from .rref import rref
-from .identity import identity_matrix
+from .utilities import identity_matrix
 
 """
 Inverse matrix computation.
